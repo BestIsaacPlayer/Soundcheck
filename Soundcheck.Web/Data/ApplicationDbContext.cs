@@ -24,7 +24,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<ConsultantRevenueReportRow> ConsultantRevenueReport => Set<ConsultantRevenueReportRow>();
 
     [DbFunction("fn_ConsultantAverageRating", "dbo")]
-    public static decimal? ConsultantAverageRating()
+    public static decimal? ConsultantAverageRating(int consultantProfileId)
     {
         throw new NotSupportedException("This method is translated to a SQL function and cannot be called directly.");
     }
