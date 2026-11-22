@@ -7,6 +7,11 @@ public class Booking
     public int Id { get; init; }
 
     [Required]
+    public string ClientId { get; init; } = string.Empty;
+
+    public ApplicationUser Client { get; init; } = null!;
+
+    [Required]
     [StringLength(200)]
     public string Topic { get; init; } = string.Empty;
 
