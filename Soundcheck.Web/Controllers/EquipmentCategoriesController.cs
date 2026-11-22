@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Soundcheck.Web.Data;
@@ -5,8 +6,10 @@ using Soundcheck.Web.Models;
 
 namespace Soundcheck.Web.Controllers;
 
+[Authorize(Roles = "Admin")]
 public class EquipmentCategoriesController(ApplicationDbContext databaseContext) : Controller
 {
+    [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
         var categories = await databaseContext.EquipmentCategories
