@@ -24,6 +24,26 @@ public class ConsultantsControllerTests
         Assert.Equal("Anna Nowak", consultant.User.FullName);
     }
 
+    [Fact]
+    public async Task Index_WithCategoryFilter_ReturnsOnlyConsultantsFromThatCategory()
+    {
+        await using var databaseContext = TestDatabase.CreateContext();
+        var guitars = new EquipmentCategory { Name = "Guitars" };
+        var keyboards = new EquipmentCategory { Name = "Keyboards" };
+        databaseContext.EquipmentCategories.AddRange(guitars, keyboards);
+        await databaseContext.SaveChangesAsync();
+        AddConsultant(databaseContext, "Anna Nowak", true, guitars);
+        AddConsultant(databaseContext, "Tomasz Wrobel", true, keyboards);
+        var controller = CreateController(databaseContext);
+
+        var result = await controller.Index(guitars.Id, null);
+
+        var viewResult = Assert.IsType<ViewResult>(result);
+        var viewModel = Assert.IsType<ConsultantListViewModel>(viewResult.Model);
+        var consultant = Assert.Single(viewModel.Consultants);
+        Assert.Equal("Anna Nowak", consultant.User.FullName);
+    }
+
     private static ConsultantsController CreateController(ApplicationDbContext databaseContext)
     {
         return new ConsultantsController(databaseContext);
