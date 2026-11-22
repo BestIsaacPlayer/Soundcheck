@@ -53,5 +53,35 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 "CK_AvailabilitySlots_EndAfterStart",
                 "[EndTime] > [StartTime]"));
         });
+
+        modelBuilder.Entity<Booking>(entity =>
+        {
+            entity.Property(booking => booking.Status)
+                .HasConversion<string>()
+                .HasMaxLength(20);
+
+            entity.Property(booking => booking.Price).HasPrecision(10, 2);
+
+            entity.HasIndex(booking => new { booking.ClientId, booking.Status });
+
+            entity.HasIndex(booking => booking.AvailabilitySlotId).IsUnique();
+
+            entity.ToTable(table => table.HasTrigger("trg_Bookings_StatusHistory"));
+
+            entity.HasOne(booking => booking.Client)
+                .WithMany(user => user.Bookings)
+                .HasForeignKey(booking => booking.ClientId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(booking => booking.AvailabilitySlot)
+                .WithOne(slot => slot.Booking)
+                .HasForeignKey<Booking>(booking => booking.AvailabilitySlotId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(booking => booking.EquipmentCategory)
+                .WithMany(category => category.Bookings)
+                .HasForeignKey(booking => booking.EquipmentCategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
     }
 }
