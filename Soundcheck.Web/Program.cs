@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Soundcheck.Web.Data;
 using Microsoft.AspNetCore.Identity;
 using Soundcheck.Web.Models;
+using Soundcheck.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services
     .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
+    .AddUserManager<ApplicationUserManager>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddScoped<IBookingService, BookingService>();
