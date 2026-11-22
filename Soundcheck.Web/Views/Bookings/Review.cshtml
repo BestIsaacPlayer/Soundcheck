@@ -1,0 +1,39 @@
+@model Soundcheck.Web.ViewModels.BookingReviewViewModel
+
+@{
+    ViewData["Title"] = "Review your consultation";
+}
+
+<h1>Review your consultation</h1>
+
+<p>@Model.ConsultantName: @Model.Topic</p>
+
+<form asp-action="Review" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Input.BookingId" />
+
+    <div class="mb-3">
+        <label asp-for="Input.Rating" class="form-label">Rating</label>
+        <select asp-for="Input.Rating" class="form-select">
+            <option value="0">Select a rating</option>
+            @for (var ratingValue = 1; ratingValue <= 5; ratingValue++)
+            {
+                <option value="@ratingValue" selected="@(Model.Input.Rating == ratingValue)">@ratingValue</option>
+            }
+        </select>
+        <span asp-validation-for="Input.Rating" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Input.Comment" class="form-label">Comment (optional)</label>
+        <textarea asp-for="Input.Comment" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Input.Comment" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit review</button>
+    <a asp-action="Index" class="btn btn-secondary">Back to my bookings</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
