@@ -18,6 +18,8 @@ builder.Services
 
 builder.Services.AddScoped<IBookingService, BookingService>();
 
+builder.Services.AddScoped<IConsultantRatingService, ConsultantRatingService>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
