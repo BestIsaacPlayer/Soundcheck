@@ -20,4 +20,6 @@ public class ConsultantProfile
     public bool IsActive { get; init; } = true;
 
     public ICollection<AvailabilitySlot> AvailabilitySlots { get; init; } = new List<AvailabilitySlot>();
+
+    public ICollection<ConsultantCategory> ConsultantCategories { get; init; } = new List<ConsultantCategory>();
 }
