@@ -1,0 +1,70 @@
+@using Soundcheck.Web.Models
+@model IEnumerable<Booking>
+
+@{
+    ViewData["Title"] = "My bookings";
+}
+
+<h1>My bookings</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+@if (!Model.Any())
+{
+    <p>You have no bookings yet. <a asp-controller="Consultants" asp-action="Index">Find a consultant</a>.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Consultant</th>
+                <th>Category</th>
+                <th>Topic</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in Model)
+            {
+                <tr>
+                    <td>@booking.AvailabilitySlot.ConsultantProfile.User.FullName</td>
+                    <td>@booking.EquipmentCategory.Name</td>
+                    <td>@booking.Topic</td>
+                    <td>@booking.AvailabilitySlot.StartTime.ToString("yyyy-MM-dd")</td>
+                    <td>@booking.AvailabilitySlot.StartTime.ToString("HH:mm") - @booking.AvailabilitySlot.EndTime.ToString("HH:mm")</td>
+                    <td>@booking.Price.ToString("0.00") PLN</td>
+                    <td>@booking.Status</td>
+                    <td>
+                        @if (booking.Status == BookingStatus.Pending || booking.Status == BookingStatus.Confirmed)
+                        {
+                            <form asp-action="Cancel" asp-route-id="@booking.Id" method="post">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Cancel</button>
+                            </form>
+                        }
+                        else if (booking.Status == BookingStatus.Completed && booking.Review == null)
+                        {
+                            <a asp-action="Review" asp-route-id="@booking.Id" class="btn btn-sm btn-outline-primary">Leave a review</a>
+                        }
+                        else if (booking.Review != null)
+                        {
+                            <span>Rated @booking.Review.Rating / 5</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

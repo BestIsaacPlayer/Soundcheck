@@ -1,0 +1,46 @@
+@model Soundcheck.Web.ViewModels.BookingCreateViewModel
+
+@{
+    ViewData["Title"] = "Book a consultation";
+}
+
+<h1>Book a consultation</h1>
+
+<dl class="row">
+    <dt class="col-sm-2">Consultant</dt>
+    <dd class="col-sm-10">@Model.ConsultantName</dd>
+    <dt class="col-sm-2">Date</dt>
+    <dd class="col-sm-10">@Model.StartTime.ToString("yyyy-MM-dd")</dd>
+    <dt class="col-sm-2">Time</dt>
+    <dd class="col-sm-10">@Model.StartTime.ToString("HH:mm") - @Model.EndTime.ToString("HH:mm")</dd>
+</dl>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Input.AvailabilitySlotId" />
+
+    <div class="mb-3">
+        <label asp-for="Input.EquipmentCategoryId" class="form-label">Equipment category</label>
+        <select asp-for="Input.EquipmentCategoryId" class="form-select">
+            <option value="0">Select a category</option>
+            @foreach (var category in Model.Categories)
+            {
+                <option value="@category.Id" selected="@(Model.Input.EquipmentCategoryId == category.Id)">@category.Name</option>
+            }
+        </select>
+        <span asp-validation-for="Input.EquipmentCategoryId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Input.Topic" class="form-label">What would you like to talk about?</label>
+        <input asp-for="Input.Topic" class="form-control" />
+        <span asp-validation-for="Input.Topic" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Book</button>
+    <a asp-controller="Consultants" asp-action="Index" class="btn btn-secondary">Back to consultants</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
