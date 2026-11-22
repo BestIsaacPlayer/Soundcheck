@@ -1,0 +1,46 @@
+@using Soundcheck.Web.Models
+@model IEnumerable<ConsultantRevenueReportRow>
+
+@{
+    ViewData["Title"] = "Revenue report";
+}
+
+<h1>Revenue report</h1>
+
+<p>Completed consultations grouped by consultant and equipment category.</p>
+
+@if (!Model.Any())
+{
+    <p>No completed consultations yet.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Consultant</th>
+                <th>Category</th>
+                <th class="text-end">Completed consultations</th>
+                <th class="text-end">Revenue</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in Model)
+            {
+                <tr>
+                    <td>@row.ConsultantName</td>
+                    <td>@row.CategoryName</td>
+                    <td class="text-end">@row.CompletedConsultations</td>
+                    <td class="text-end">@row.TotalRevenue.ToString("0.00") PLN</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="2">Total</th>
+                <th class="text-end">@Model.Sum(row => row.CompletedConsultations)</th>
+                <th class="text-end">@Model.Sum(row => row.TotalRevenue).ToString("0.00") PLN</th>
+            </tr>
+        </tfoot>
+    </table>
+}
