@@ -23,7 +23,7 @@ public class Booking
     [StringLength(200)]
     public string Topic { get; init; } = string.Empty;
 
-    public BookingStatus Status { get; init; } = BookingStatus.Pending;
+    public BookingStatus Status { get; set; } = BookingStatus.Pending;
 
     [Range(0, 100000)]
     public decimal Price { get; init; }
