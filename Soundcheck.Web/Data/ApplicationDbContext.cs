@@ -24,5 +24,14 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<ConsultantProfile>(entity =>
+        {
+            entity.Property(profile => profile.HourlyRate).HasPrecision(10, 2);
+
+            entity.HasOne(profile => profile.User)
+                .WithOne(user => user.ConsultantProfile)
+                .HasForeignKey<ConsultantProfile>(profile => profile.UserId);
+        });
     }
 }
