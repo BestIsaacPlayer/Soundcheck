@@ -12,4 +12,6 @@ public class EquipmentCategory
 
     [StringLength(500)]
     public string? Description { get; init; }
+
+    public ICollection<ConsultantCategory> ConsultantCategories { get; init; } = new List<ConsultantCategory>();
 }
