@@ -14,6 +14,8 @@ builder.Services
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddScoped<IBookingService, BookingService>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
