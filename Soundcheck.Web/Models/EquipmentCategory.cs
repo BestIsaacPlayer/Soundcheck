@@ -14,4 +14,6 @@ public class EquipmentCategory
     public string? Description { get; init; }
 
     public ICollection<ConsultantCategory> ConsultantCategories { get; init; } = new List<ConsultantCategory>();
+
+    public ICollection<Booking> Bookings { get; init; } = new List<Booking>();
 }
