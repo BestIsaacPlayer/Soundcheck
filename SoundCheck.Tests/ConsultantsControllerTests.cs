@@ -44,6 +44,22 @@ public class ConsultantsControllerTests
         Assert.Equal("Anna Nowak", consultant.User.FullName);
     }
 
+    [Fact]
+    public async Task Index_WithSearchText_ReturnsConsultantsMatchingName()
+    {
+        await using var databaseContext = TestDatabase.CreateContext();
+        AddConsultant(databaseContext, "Anna Nowak", true);
+        AddConsultant(databaseContext, "Tomasz Wrobel", true);
+        var controller = CreateController(databaseContext);
+
+        var result = await controller.Index(null, "Nowak");
+
+        var viewResult = Assert.IsType<ViewResult>(result);
+        var viewModel = Assert.IsType<ConsultantListViewModel>(viewResult.Model);
+        var consultant = Assert.Single(viewModel.Consultants);
+        Assert.Equal("Anna Nowak", consultant.User.FullName);
+    }
+
     private static ConsultantsController CreateController(ApplicationDbContext databaseContext)
     {
         return new ConsultantsController(databaseContext);
