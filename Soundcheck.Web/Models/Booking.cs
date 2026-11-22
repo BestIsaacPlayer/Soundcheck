@@ -15,6 +15,10 @@ public class Booking
 
     public AvailabilitySlot AvailabilitySlot { get; init; } = null!;
 
+    public int EquipmentCategoryId { get; init; }
+
+    public EquipmentCategory EquipmentCategory { get; init; } = null!;
+
     [Required]
     [StringLength(200)]
     public string Topic { get; init; } = string.Empty;
