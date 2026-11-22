@@ -1,0 +1,60 @@
+@using Soundcheck.Web.Models
+@model IEnumerable<AvailabilitySlot>
+
+@{
+    ViewData["Title"] = "My slots";
+}
+
+<h1>My slots</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Add slot</a>
+</p>
+
+@if (!Model.Any())
+{
+    <p>You have no upcoming slots.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var slot in Model)
+            {
+                <tr>
+                    <td>@slot.StartTime.ToString("yyyy-MM-dd")</td>
+                    <td>@slot.StartTime.ToString("HH:mm")</td>
+                    <td>@slot.EndTime.ToString("HH:mm")</td>
+                    <td>@(slot.IsBooked ? "Booked" : "Free")</td>
+                    <td>
+                        @if (!slot.IsBooked)
+                        {
+                            <form asp-action="Delete" asp-route-id="@slot.Id" method="post">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
