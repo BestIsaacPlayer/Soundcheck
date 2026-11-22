@@ -41,4 +41,50 @@ public class EquipmentCategoriesController(ApplicationDbContext databaseContext)
 
         return RedirectToAction(nameof(Index));
     }
+
+    public async Task<IActionResult> Edit(int id)
+    {
+        var category = await databaseContext.EquipmentCategories.FindAsync(id);
+        if (category == null)
+        {
+            return NotFound();
+        }
+
+        return View(category);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] EquipmentCategory category)
+    {
+        if (id != category.Id)
+        {
+            return NotFound();
+        }
+
+        var existingCategory = await databaseContext.EquipmentCategories.FindAsync(id);
+        if (existingCategory == null)
+        {
+            return NotFound();
+        }
+
+        var nameTakenByAnotherCategory = await databaseContext.EquipmentCategories
+            .AnyAsync(otherCategory => otherCategory.Name == category.Name && otherCategory.Id != id);
+
+        if (nameTakenByAnotherCategory)
+        {
+            ModelState.AddModelError(nameof(EquipmentCategory.Name), "A category with this name already exists.");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return View(category);
+        }
+
+        existingCategory.Name = category.Name;
+        existingCategory.Description = category.Description;
+        await databaseContext.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
+    }
 }
