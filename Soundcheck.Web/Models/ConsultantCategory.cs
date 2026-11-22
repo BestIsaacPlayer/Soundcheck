@@ -8,6 +8,10 @@ public class ConsultantCategory
 
     public ConsultantProfile ConsultantProfile { get; init; } = null!;
 
+    public int EquipmentCategoryId { get; init; }
+
+    public EquipmentCategory EquipmentCategory { get; init; } = null!;
+
     [Range(0, 60)]
     public int YearsOfExperience { get; init; }
 }
