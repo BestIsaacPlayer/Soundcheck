@@ -21,6 +21,11 @@ public class ApplicationUserManager(
 
     public override async Task<IdentityResult> CreateAsync(ApplicationUser user, string password)
     {
+        if (string.IsNullOrWhiteSpace(user.FullName))
+        {
+            user.FullName = user.Email ?? user.UserName ?? string.Empty;
+        }
+
         var creationResult = await base.CreateAsync(user, password);
         if (!creationResult.Succeeded)
         {
