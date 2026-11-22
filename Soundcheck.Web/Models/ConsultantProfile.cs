@@ -18,4 +18,6 @@ public class ConsultantProfile
     public decimal HourlyRate { get; init; }
 
     public bool IsActive { get; init; } = true;
+
+    public ICollection<AvailabilitySlot> AvailabilitySlots { get; init; } = new List<AvailabilitySlot>();
 }
