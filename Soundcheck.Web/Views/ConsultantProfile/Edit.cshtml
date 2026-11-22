@@ -1,0 +1,74 @@
+@model Soundcheck.Web.ViewModels.ConsultantProfileEditModel
+
+@{
+    ViewData["Title"] = "My profile";
+}
+
+<h1>My profile</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+<form asp-action="Edit" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="FullName" class="form-label">Full name</label>
+        <input asp-for="FullName" class="form-control" />
+        <span asp-validation-for="FullName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Bio" class="form-label"></label>
+        <textarea asp-for="Bio" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Bio" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="HourlyRate" class="form-label">Hourly rate (PLN)</label>
+        <input asp-for="HourlyRate" class="form-control" />
+        <span asp-validation-for="HourlyRate" class="text-danger"></span>
+    </div>
+
+    <h5>Specializations</h5>
+    <table class="table w-auto">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Years of experience</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var index = 0; index < Model.Categories.Count; index++)
+            {
+                <tr>
+                    <td>
+                        <input type="hidden" asp-for="Categories[index].EquipmentCategoryId" />
+                        <input type="hidden" asp-for="Categories[index].CategoryName" />
+                        <div class="form-check">
+                            <input asp-for="Categories[index].IsSelected" class="form-check-input" />
+                            <label asp-for="Categories[index].IsSelected" class="form-check-label">@Model.Categories[index].CategoryName</label>
+                        </div>
+                    </td>
+                    <td>
+                        <input asp-for="Categories[index].YearsOfExperience" type="number" min="0" max="60" class="form-control" />
+                        <span asp-validation-for="Categories[index].YearsOfExperience" class="text-danger"></span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="form-check mb-3">
+        <input asp-for="IsActive" class="form-check-input" />
+        <label asp-for="IsActive" class="form-check-label">Profile is active and visible to clients</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
