@@ -18,4 +18,8 @@
         <Using Include="Xunit"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Soundcheck.Web\Soundcheck.Web.csproj" />
+    </ItemGroup>
+
 </Project>
