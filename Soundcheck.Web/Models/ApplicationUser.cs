@@ -8,4 +8,6 @@ public class ApplicationUser : IdentityUser
     [Required]
     [StringLength(100)]
     public string FullName { get; set; } = string.Empty;
+
+    public ConsultantProfile? ConsultantProfile { get; set; }
 }
