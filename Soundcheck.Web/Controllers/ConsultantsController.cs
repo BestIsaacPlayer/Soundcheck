@@ -40,4 +40,26 @@ public class ConsultantsController(ApplicationDbContext databaseContext) : Contr
 
         return View(viewModel);
     }
+
+    public async Task<IActionResult> Details(int id)
+    {
+        var currentTime = DateTime.Now;
+
+        var consultant = await databaseContext.ConsultantProfiles
+            .AsNoTracking()
+            .Include(profile => profile.User)
+            .Include(profile => profile.ConsultantCategories)
+                .ThenInclude(consultantCategory => consultantCategory.EquipmentCategory)
+            .Include(profile => profile.AvailabilitySlots
+                .Where(slot => !slot.IsBooked && slot.StartTime > currentTime)
+                .OrderBy(slot => slot.StartTime))
+            .FirstOrDefaultAsync(profile => profile.Id == id && profile.IsActive);
+
+        if (consultant == null)
+        {
+            return NotFound();
+        }
+
+        return View(consultant);
+    }
 }

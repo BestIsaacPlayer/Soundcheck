@@ -1,0 +1,56 @@
+@model Soundcheck.Web.Models.ConsultantProfile
+
+@{
+    ViewData["Title"] = Model.User.FullName;
+}
+
+<h1>@Model.User.FullName</h1>
+
+<p>@Model.Bio</p>
+
+<dl class="row">
+    <dt class="col-sm-2">Hourly rate</dt>
+    <dd class="col-sm-10">@Model.HourlyRate.ToString("0.00") PLN</dd>
+    <dt class="col-sm-2">Specializations</dt>
+    <dd class="col-sm-10">
+        @foreach (var consultantCategory in Model.ConsultantCategories)
+        {
+            <div>@consultantCategory.EquipmentCategory.Name, @consultantCategory.YearsOfExperience years of experience</div>
+        }
+    </dd>
+</dl>
+
+<h3>Available slots</h3>
+
+@if (!Model.AvailabilitySlots.Any())
+{
+    <p>This consultant has no available slots right now.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Start</th>
+                <th>End</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var slot in Model.AvailabilitySlots)
+            {
+                <tr>
+                    <td>@slot.StartTime.ToString("yyyy-MM-dd")</td>
+                    <td>@slot.StartTime.ToString("HH:mm")</td>
+                    <td>@slot.EndTime.ToString("HH:mm")</td>
+                    <td>
+                        <a asp-controller="Bookings" asp-action="Create" asp-route-slotId="@slot.Id">Book</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a asp-action="Index" class="btn btn-secondary">Back to list</a>
