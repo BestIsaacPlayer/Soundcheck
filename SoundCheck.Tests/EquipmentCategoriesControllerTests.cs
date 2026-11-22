@@ -19,4 +19,19 @@ public class EquipmentCategoriesControllerTests
         Assert.Equal(nameof(EquipmentCategoriesController.Index), redirectResult.ActionName);
         Assert.Equal(1, await databaseContext.EquipmentCategories.CountAsync());
     }
+
+    [Fact]
+    public async Task Create_WithDuplicateName_ReturnsViewWithModelErrorAndDoesNotSave()
+    {
+        await using var databaseContext = TestDatabase.CreateContext();
+        databaseContext.EquipmentCategories.Add(new EquipmentCategory { Name = "Guitars" });
+        await databaseContext.SaveChangesAsync();
+        var controller = new EquipmentCategoriesController(databaseContext);
+
+        var result = await controller.Create(new EquipmentCategory { Name = "Guitars" });
+
+        Assert.IsType<ViewResult>(result);
+        Assert.True(controller.ModelState.ContainsKey(nameof(EquipmentCategory.Name)));
+        Assert.Equal(1, await databaseContext.EquipmentCategories.CountAsync());
+    }
 }
