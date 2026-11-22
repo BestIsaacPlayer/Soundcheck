@@ -8,10 +8,10 @@ public class EquipmentCategory
 
     [Required]
     [StringLength(100)]
-    public string Name { get; init; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
     [StringLength(500)]
-    public string? Description { get; init; }
+    public string? Description { get; set; }
 
     public ICollection<ConsultantCategory> ConsultantCategories { get; init; } = new List<ConsultantCategory>();
 
