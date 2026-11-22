@@ -39,4 +39,26 @@ public static class DatabaseSeeder
         await userManager.AddToRoleAsync(newUser, roleName);
         return newUser;
     }
+
+    private static List<AvailabilitySlot> CreateAvailabilitySlots()
+    {
+        var slots = new List<AvailabilitySlot>();
+        var firstDay = DateTime.Today.AddDays(1);
+
+        for (var dayOffset = 0; dayOffset < 7; dayOffset++)
+        {
+            foreach (var startHour in new[] { 10, 14 })
+            {
+                var startTime = firstDay.AddDays(dayOffset).AddHours(startHour);
+                slots.Add(new AvailabilitySlot
+                {
+                    StartTime = startTime,
+                    EndTime = startTime.AddHours(1),
+                    IsBooked = false
+                });
+            }
+        }
+
+        return slots;
+    }
 }
