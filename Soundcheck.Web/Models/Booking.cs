@@ -29,4 +29,6 @@ public class Booking
     public decimal Price { get; init; }
 
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
+
+    public ConsultationReview? Review { get; init; }
 }
