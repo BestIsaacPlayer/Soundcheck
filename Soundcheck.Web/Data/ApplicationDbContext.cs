@@ -20,4 +20,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<ConsultationReview> ConsultationReviews => Set<ConsultationReview>();
 
     public DbSet<BookingStatusHistory> BookingStatusHistory => Set<BookingStatusHistory>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+    }
 }
