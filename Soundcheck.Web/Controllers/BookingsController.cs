@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Soundcheck.Web.Data;
+using Soundcheck.Web.Models;
 using Soundcheck.Web.Services;
 using Soundcheck.Web.ViewModels;
 
@@ -98,9 +99,56 @@ public class BookingsController(ApplicationDbContext databaseContext, IBookingSe
         return RedirectToAction(nameof(Index));
     }
 
+    public async Task<IActionResult> Review(int id)
+    {
+        var viewModel = await BuildReviewViewModelAsync(id, null);
+        if (viewModel == null)
+        {
+            return NotFound();
+        }
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Review(BookingReviewInputModel input)
+    {
+        if (!ModelState.IsValid)
+        {
+            return await ReturnReviewViewAsync(input);
+        }
+
+        var result = await bookingService.AddReviewAsync(
+            input.BookingId,
+            GetCurrentUserId(),
+            input.Rating,
+            input.Comment);
+
+        if (!result.Succeeded)
+        {
+            ModelState.AddModelError(string.Empty, result.ErrorMessage ?? "The review could not be saved.");
+            return await ReturnReviewViewAsync(input);
+        }
+
+        TempData["SuccessMessage"] = "Thank you for your review.";
+        return RedirectToAction(nameof(Index));
+    }
+
     private async Task<IActionResult> ReturnCreateViewAsync(BookingCreateInputModel input)
     {
         var viewModel = await BuildCreateViewModelAsync(input.AvailabilitySlotId, input);
+        if (viewModel == null)
+        {
+            return NotFound();
+        }
+
+        return View(viewModel);
+    }
+
+    private async Task<IActionResult> ReturnReviewViewAsync(BookingReviewInputModel input)
+    {
+        var viewModel = await BuildReviewViewModelAsync(input.BookingId, input);
         if (viewModel == null)
         {
             return NotFound();
@@ -135,6 +183,33 @@ public class BookingsController(ApplicationDbContext databaseContext, IBookingSe
                 .Select(consultantCategory => consultantCategory.EquipmentCategory)
                 .OrderBy(category => category.Name)
                 .ToList()
+        };
+    }
+
+    private async Task<BookingReviewViewModel?> BuildReviewViewModelAsync(int bookingId, BookingReviewInputModel? input)
+    {
+        var currentUserId = GetCurrentUserId();
+
+        var booking = await databaseContext.Bookings
+            .AsNoTracking()
+            .Include(bookingWithSlot => bookingWithSlot.AvailabilitySlot)
+                .ThenInclude(slot => slot.ConsultantProfile)
+                    .ThenInclude(profile => profile.User)
+            .FirstOrDefaultAsync(candidate =>
+                candidate.Id == bookingId
+                && candidate.ClientId == currentUserId
+                && candidate.Status == BookingStatus.Completed);
+
+        if (booking == null)
+        {
+            return null;
+        }
+
+        return new BookingReviewViewModel
+        {
+            Input = input ?? new BookingReviewInputModel { BookingId = bookingId },
+            ConsultantName = booking.AvailabilitySlot.ConsultantProfile.User.FullName,
+            Topic = booking.Topic
         };
     }
 
