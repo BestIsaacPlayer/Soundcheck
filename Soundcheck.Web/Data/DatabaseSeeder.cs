@@ -110,7 +110,11 @@ public static class DatabaseSeeder
             throw new InvalidOperationException($"Seeding user {email} failed: {errorDescriptions}");
         }
 
-        await userManager.AddToRoleAsync(newUser, roleName);
+        if (!await userManager.IsInRoleAsync(newUser, roleName))
+        {
+            await userManager.AddToRoleAsync(newUser, roleName);
+        }
+        
         return newUser;
     }
 
