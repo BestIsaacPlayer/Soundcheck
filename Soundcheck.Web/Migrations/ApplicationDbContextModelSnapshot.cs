@@ -392,6 +392,34 @@ namespace Soundcheck.Web.Migrations
                     b.ToTable("ConsultantProfiles");
                 });
 
+            modelBuilder.Entity("Soundcheck.Web.Models.ConsultantRevenueReportRow", b =>
+                {
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CompletedConsultations")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConsultantName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ConsultantProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EquipmentCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalRevenue")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("vw_ConsultantRevenueReport", (string)null);
+                });
+
             modelBuilder.Entity("Soundcheck.Web.Models.ConsultationReview", b =>
                 {
                     b.Property<int>("Id")
