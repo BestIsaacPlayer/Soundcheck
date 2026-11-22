@@ -13,4 +13,6 @@ public class AvailabilitySlot
     public DateTime EndTime { get; init; }
 
     public bool IsBooked { get; init; }
+
+    public Booking? Booking { get; init; }
 }
