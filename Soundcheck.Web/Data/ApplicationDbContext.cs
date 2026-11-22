@@ -20,6 +20,14 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<ConsultationReview> ConsultationReviews => Set<ConsultationReview>();
 
     public DbSet<BookingStatusHistory> BookingStatusHistory => Set<BookingStatusHistory>();
+    
+    public DbSet<ConsultantRevenueReportRow> ConsultantRevenueReport => Set<ConsultantRevenueReportRow>();
+
+    [DbFunction("fn_ConsultantAverageRating", "dbo")]
+    public static decimal? ConsultantAverageRating()
+    {
+        throw new NotSupportedException("This method is translated to a SQL function and cannot be called directly.");
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -15,7 +15,7 @@ public class ConsultantRatingService(ApplicationDbContext databaseContext) : ICo
             .Select(profile => new
             {
                 profile.Id,
-                AverageRating = databaseContext.ConsultantAverageRating(profile.Id)
+                AverageRating = ApplicationDbContext.ConsultantAverageRating()
             })
             .ToListAsync();
 
