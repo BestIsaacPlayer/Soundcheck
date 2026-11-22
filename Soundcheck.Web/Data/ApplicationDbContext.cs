@@ -33,5 +33,16 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 .WithOne(user => user.ConsultantProfile)
                 .HasForeignKey<ConsultantProfile>(profile => profile.UserId);
         });
+
+        modelBuilder.Entity<EquipmentCategory>(entity => { entity.HasIndex(category => category.Name).IsUnique(); });
+
+        modelBuilder.Entity<ConsultantCategory>(entity =>
+        {
+            entity.HasKey(consultantCategory => new
+            {
+                consultantCategory.ConsultantProfileId,
+                consultantCategory.EquipmentCategoryId
+            });
+        });
     }
 }
