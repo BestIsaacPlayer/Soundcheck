@@ -44,5 +44,14 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 consultantCategory.EquipmentCategoryId
             });
         });
+
+        modelBuilder.Entity<AvailabilitySlot>(entity =>
+        {
+            entity.HasIndex(slot => new { slot.ConsultantProfileId, slot.StartTime });
+
+            entity.ToTable(table => table.HasCheckConstraint(
+                "CK_AvailabilitySlots_EndAfterStart",
+                "[EndTime] > [StartTime]"));
+        });
     }
 }
