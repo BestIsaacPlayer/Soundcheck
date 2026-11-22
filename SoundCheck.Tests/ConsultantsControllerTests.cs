@@ -61,6 +61,21 @@ public class ConsultantsControllerTests
     }
 
     [Fact]
+    public async Task Index_IncludesAverageRatingsFromRatingService()
+    {
+        await using var databaseContext = TestDatabase.CreateContext();
+        var consultant = AddConsultant(databaseContext, "Anna Nowak", true);
+        var averageRatings = new Dictionary<int, decimal> { { consultant.Id, 4.5m } };
+        var controller = new ConsultantsController(databaseContext, new FakeConsultantRatingService(averageRatings));
+
+        var result = await controller.Index(null, null);
+
+        var viewResult = Assert.IsType<ViewResult>(result);
+        var viewModel = Assert.IsType<ConsultantListViewModel>(viewResult.Model);
+        Assert.Equal(4.5m, viewModel.AverageRatings[consultant.Id]);
+    }
+
+    [Fact]
     public async Task Details_ForUnknownConsultant_ReturnsNotFound()
     {
         await using var databaseContext = TestDatabase.CreateContext();
@@ -113,7 +128,7 @@ public class ConsultantsControllerTests
 
     private static ConsultantsController CreateController(ApplicationDbContext databaseContext)
     {
-        return new ConsultantsController(databaseContext);
+        return new ConsultantsController(databaseContext, new FakeConsultantRatingService());
     }
 
     private static ConsultantProfile AddConsultant(
