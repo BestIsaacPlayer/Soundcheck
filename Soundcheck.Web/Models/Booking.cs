@@ -31,4 +31,6 @@ public class Booking
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
     public ConsultationReview? Review { get; init; }
+
+    public ICollection<BookingStatusHistory> StatusHistory { get; init; } = new List<BookingStatusHistory>();
 }
