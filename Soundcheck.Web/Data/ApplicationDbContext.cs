@@ -83,5 +83,27 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 .HasForeignKey(booking => booking.EquipmentCategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
+
+        modelBuilder.Entity<ConsultationReview>(entity =>
+        {
+            entity.HasOne(review => review.Booking)
+                .WithOne(booking => booking.Review)
+                .HasForeignKey<ConsultationReview>(review => review.BookingId);
+
+            entity.ToTable(table => table.HasCheckConstraint(
+                "CK_ConsultationReviews_Rating",
+                "[Rating] BETWEEN 1 AND 5"));
+        });
+
+        modelBuilder.Entity<BookingStatusHistory>(entity =>
+        {
+            entity.Property(history => history.OldStatus)
+                .HasConversion<string>()
+                .HasMaxLength(20);
+
+            entity.Property(history => history.NewStatus)
+                .HasConversion<string>()
+                .HasMaxLength(20);
+        });
     }
 }
