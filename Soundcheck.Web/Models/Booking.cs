@@ -11,6 +11,10 @@ public class Booking
 
     public ApplicationUser Client { get; init; } = null!;
 
+    public int AvailabilitySlotId { get; init; }
+
+    public AvailabilitySlot AvailabilitySlot { get; init; } = null!;
+
     [Required]
     [StringLength(200)]
     public string Topic { get; init; } = string.Empty;
