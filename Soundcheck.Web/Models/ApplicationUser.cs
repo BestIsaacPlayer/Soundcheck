@@ -10,4 +10,6 @@ public class ApplicationUser : IdentityUser
     public string FullName { get; set; } = string.Empty;
 
     public ConsultantProfile? ConsultantProfile { get; set; }
+
+    public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 }
