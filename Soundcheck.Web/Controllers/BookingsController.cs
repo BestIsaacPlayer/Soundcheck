@@ -9,7 +9,7 @@ using Soundcheck.Web.ViewModels;
 
 namespace Soundcheck.Web.Controllers;
 
-[Authorize]
+[Authorize(Roles = "Client")]
 public class BookingsController(ApplicationDbContext databaseContext, IBookingService bookingService)
     : Controller
 {
