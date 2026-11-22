@@ -297,7 +297,8 @@ namespace Soundcheck.Web.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AvailabilitySlotId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[Status] <> 'Cancelled'");
 
                     b.HasIndex("EquipmentCategoryId");
 
@@ -510,8 +511,8 @@ namespace Soundcheck.Web.Migrations
             modelBuilder.Entity("Soundcheck.Web.Models.Booking", b =>
                 {
                     b.HasOne("Soundcheck.Web.Models.AvailabilitySlot", "AvailabilitySlot")
-                        .WithOne("Booking")
-                        .HasForeignKey("Soundcheck.Web.Models.Booking", "AvailabilitySlotId")
+                        .WithMany("Bookings")
+                        .HasForeignKey("AvailabilitySlotId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -595,7 +596,7 @@ namespace Soundcheck.Web.Migrations
 
             modelBuilder.Entity("Soundcheck.Web.Models.AvailabilitySlot", b =>
                 {
-                    b.Navigation("Booking");
+                    b.Navigation("Bookings");
                 });
 
             modelBuilder.Entity("Soundcheck.Web.Models.Booking", b =>

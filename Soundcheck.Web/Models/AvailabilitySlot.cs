@@ -14,5 +14,5 @@ public class AvailabilitySlot
 
     public bool IsBooked { get; init; }
 
-    public Booking? Booking { get; init; }
+    public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 }

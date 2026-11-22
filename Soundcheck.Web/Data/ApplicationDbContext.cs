@@ -64,7 +64,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
             entity.HasIndex(booking => new { booking.ClientId, booking.Status });
 
-            entity.HasIndex(booking => booking.AvailabilitySlotId).IsUnique();
+            entity.HasIndex(booking => booking.AvailabilitySlotId)
+                .IsUnique()
+                .HasFilter("[Status] <> 'Cancelled'");
 
             entity.ToTable(table => table.HasTrigger("trg_Bookings_StatusHistory"));
 
@@ -74,8 +76,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(booking => booking.AvailabilitySlot)
-                .WithOne(slot => slot.Booking)
-                .HasForeignKey<Booking>(booking => booking.AvailabilitySlotId)
+                .WithMany(slot => slot.Bookings)
+                .HasForeignKey(booking => booking.AvailabilitySlotId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(booking => booking.EquipmentCategory)
