@@ -87,4 +87,41 @@ public class EquipmentCategoriesController(ApplicationDbContext databaseContext)
 
         return RedirectToAction(nameof(Index));
     }
+
+    public async Task<IActionResult> Delete(int id)
+    {
+        var category = await databaseContext.EquipmentCategories
+            .AsNoTracking()
+            .FirstOrDefaultAsync(existingCategory => existingCategory.Id == id);
+
+        if (category == null)
+        {
+            return NotFound();
+        }
+
+        return View(category);
+    }
+
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var category = await databaseContext.EquipmentCategories.FindAsync(id);
+        if (category == null)
+        {
+            return NotFound();
+        }
+
+        var categoryHasBookings = await databaseContext.Bookings.AnyAsync(booking => booking.EquipmentCategoryId == id);
+        if (categoryHasBookings)
+        {
+            TempData["ErrorMessage"] = "This category cannot be deleted because it is used by existing bookings.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        databaseContext.EquipmentCategories.Remove(category);
+        await databaseContext.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
+    }
 }
