@@ -1,4 +1,4 @@
-namespace Soundcheck.Models;
+namespace Soundcheck.Web.Models;
 
 public class ErrorViewModel
 {

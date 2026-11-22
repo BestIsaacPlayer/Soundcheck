@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Soundcheck", "Soundcheck\Soundcheck.csproj", "{E3682871-1187-4910-9A53-1CC3BFA0E3FF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Soundcheck.Web", "Soundcheck.Web\Soundcheck.Web.csproj", "{E3682871-1187-4910-9A53-1CC3BFA0E3FF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoundCheck.Tests", "SoundCheck.Tests\SoundCheck.Tests.csproj", "{7D28C615-F6DF-493D-BF72-6B72069D3DB3}"
 EndProject
