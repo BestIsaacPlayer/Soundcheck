@@ -45,6 +45,14 @@ else
                                 <span class="badge text-bg-secondary">@consultantCategory.EquipmentCategory.Name</span>
                             }
                         </p>
+                        @if (Model.AverageRatings.TryGetValue(consultant.Id, out var averageRating))
+                        {
+                            <p class="mb-2">Rating: @averageRating.ToString("0.00") / 5</p>
+                        }
+                        else
+                        {
+                            <p class="mb-2 text-muted">No reviews yet</p>
+                        }
                         <p class="mb-0">@consultant.HourlyRate.ToString("0.00") PLN / hour</p>
                     </div>
                     <div class="card-footer">
