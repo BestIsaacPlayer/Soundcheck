@@ -115,5 +115,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 .HasConversion<string>()
                 .HasMaxLength(20);
         });
+        
+        modelBuilder.Entity<ConsultantRevenueReportRow>(entity =>
+        {
+            entity.HasNoKey();
+            entity.ToView("vw_ConsultantRevenueReport");
+            entity.Property(row => row.TotalRevenue).HasPrecision(18, 2);
+        });
     }
 }
