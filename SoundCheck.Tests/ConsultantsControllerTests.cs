@@ -60,6 +60,17 @@ public class ConsultantsControllerTests
         Assert.Equal("Anna Nowak", consultant.User.FullName);
     }
 
+    [Fact]
+    public async Task Details_ForUnknownConsultant_ReturnsNotFound()
+    {
+        await using var databaseContext = TestDatabase.CreateContext();
+        var controller = CreateController(databaseContext);
+
+        var result = await controller.Details(9999);
+
+        Assert.IsType<NotFoundResult>(result);
+    }
+
     private static ConsultantsController CreateController(ApplicationDbContext databaseContext)
     {
         return new ConsultantsController(databaseContext);
