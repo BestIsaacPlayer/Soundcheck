@@ -1,11 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Soundcheck.Web.Data;
+using Soundcheck.Web.Services;
 using Soundcheck.Web.ViewModels;
 
 namespace Soundcheck.Web.Controllers;
 
-public class ConsultantsController(ApplicationDbContext databaseContext) : Controller
+public class ConsultantsController(
+    ApplicationDbContext databaseContext,
+    IConsultantRatingService consultantRatingService)
+    : Controller
 {
     public async Task<IActionResult> Index(int? categoryId, string? searchText)
     {
@@ -29,10 +33,12 @@ public class ConsultantsController(ApplicationDbContext databaseContext) : Contr
         }
 
         var consultants = await consultantsQuery.OrderBy(profile => profile.User.FullName).ToListAsync();
+        var averageRatings = await consultantRatingService.GetAverageRatingsAsync(consultants.Select(profile => profile.Id));
 
         var viewModel = new ConsultantListViewModel
         {
             Consultants = consultants,
+            AverageRatings = averageRatings,
             Categories = await databaseContext.EquipmentCategories.AsNoTracking().OrderBy(category => category.Name).ToListAsync(),
             SelectedCategoryId = categoryId,
             SearchText = searchText
