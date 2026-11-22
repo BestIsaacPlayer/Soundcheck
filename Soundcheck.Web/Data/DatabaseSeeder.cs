@@ -32,6 +32,18 @@ public static class DatabaseSeeder
         await CreateUserAsync(userManager, "client.one@soundcheck.local", "Jan Kowalski", "Client");
         await CreateUserAsync(userManager, "client.two@soundcheck.local", "Maria Zielińska", "Client");
 
+        if (!await databaseContext.EquipmentCategories.AnyAsync())
+        {
+            databaseContext.EquipmentCategories.AddRange(
+                new EquipmentCategory { Name = "Guitars", Description = "Electric, acoustic and bass guitars" },
+                new EquipmentCategory { Name = "Keyboards", Description = "Digital pianos, synthesizers and controllers" },
+                new EquipmentCategory { Name = "Studio equipment", Description = "Audio interfaces, microphones and monitors" },
+                new EquipmentCategory { Name = "DJ equipment", Description = "Controllers, turntables and mixers" },
+                new EquipmentCategory { Name = "Drums", Description = "Acoustic and electronic drum kits" });
+
+            await databaseContext.SaveChangesAsync();
+        }
+
         if (!await databaseContext.ConsultantProfiles.AnyAsync())
         {
             var guitars = await databaseContext.EquipmentCategories.SingleAsync(category => category.Name == "Guitars");
