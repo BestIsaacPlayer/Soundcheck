@@ -42,11 +42,20 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="ConsultantProfile" asp-action="Edit">My profile</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="ConsultantSlots" asp-action="Index">My slots</a>
+                        </li>
                     }
                     @if (User.IsInRole("Admin"))
                     {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Reports" asp-action="Revenue">Reports</a>
+                        </li>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="ConsultantManagement" asp-action="Index">Consultants management</a>
                         </li>
                     }
                 </ul>
