@@ -8,6 +8,9 @@
 *.userosscache
 *.sln.docstates
 
+# Secret Files
+.env
+
 # Build results
 [Bb]in/
 [Oo]bj/
