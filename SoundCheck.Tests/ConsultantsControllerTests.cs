@@ -71,6 +71,46 @@ public class ConsultantsControllerTests
         Assert.IsType<NotFoundResult>(result);
     }
 
+    [Fact]
+    public async Task Details_ReturnsOnlyUpcomingAvailableSlots()
+    {
+        await using var databaseContext = TestDatabase.CreateContext();
+        var consultant = AddConsultant(databaseContext, "Anna Nowak", true);
+        var currentTime = DateTime.Now;
+        databaseContext.AvailabilitySlots.AddRange(
+            new AvailabilitySlot
+            {
+                ConsultantProfileId = consultant.Id,
+                StartTime = currentTime.AddDays(-1),
+                EndTime = currentTime.AddDays(-1).AddHours(1),
+                IsBooked = false
+            },
+            new AvailabilitySlot
+            {
+                ConsultantProfileId = consultant.Id,
+                StartTime = currentTime.AddDays(1),
+                EndTime = currentTime.AddDays(1).AddHours(1),
+                IsBooked = true
+            },
+            new AvailabilitySlot
+            {
+                ConsultantProfileId = consultant.Id,
+                StartTime = currentTime.AddDays(2),
+                EndTime = currentTime.AddDays(2).AddHours(1),
+                IsBooked = false
+            });
+        await databaseContext.SaveChangesAsync();
+        var controller = CreateController(databaseContext);
+
+        var result = await controller.Details(consultant.Id);
+
+        var viewResult = Assert.IsType<ViewResult>(result);
+        var model = Assert.IsType<ConsultantProfile>(viewResult.Model);
+        var slot = Assert.Single(model.AvailabilitySlots);
+        Assert.False(slot.IsBooked);
+        Assert.True(slot.StartTime > currentTime);
+    }
+
     private static ConsultantsController CreateController(ApplicationDbContext databaseContext)
     {
         return new ConsultantsController(databaseContext);
