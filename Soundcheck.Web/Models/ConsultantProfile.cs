@@ -12,12 +12,12 @@ public class ConsultantProfile
     public ApplicationUser User { get; init; } = null!;
 
     [StringLength(1000)]
-    public string? Bio { get; init; }
+    public string? Bio { get; set; }
 
     [Range(0, 10000)]
-    public decimal HourlyRate { get; init; }
+    public decimal HourlyRate { get; set; }
 
-    public bool IsActive { get; init; } = true;
+    public bool IsActive { get; set; } = true;
 
     public ICollection<AvailabilitySlot> AvailabilitySlots { get; init; } = new List<AvailabilitySlot>();
 
