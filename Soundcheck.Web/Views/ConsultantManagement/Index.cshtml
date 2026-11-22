@@ -1,0 +1,60 @@
+@using Soundcheck.Web.Models
+@model IEnumerable<ApplicationUser>
+
+@{
+    ViewData["Title"] = "Consultants management";
+}
+
+<h1>Consultants management</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Consultant profile</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.FullName</td>
+                <td>@user.Email</td>
+                <td>
+                    @if (user.ConsultantProfile == null)
+                    {
+                        <span class="text-muted">None</span>
+                    }
+                    else if (user.ConsultantProfile.IsActive)
+                    {
+                        <span>Active</span>
+                    }
+                    else
+                    {
+                        <span>Inactive</span>
+                    }
+                </td>
+                <td>
+                    @if (user.ConsultantProfile == null)
+                    {
+                        <form asp-action="MakeConsultant" asp-route-id="@user.Id" method="post">
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Make consultant</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
